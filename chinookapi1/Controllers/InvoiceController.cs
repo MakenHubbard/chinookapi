@@ -14,8 +14,9 @@ namespace chinookapi1.Controllers
     public class InvoiceController : ControllerBase
     {
         [HttpGet]
-        public Invoice Get()
+        public List<Invoice> Get()
         {
+
             using (var connection = new SqlConnection("Server=(Local);Database=Chinook;Trusted_Connection=True"))
             {
                 connection.Open();
@@ -31,25 +32,28 @@ namespace chinookapi1.Controllers
 
                 var read = command.ExecuteReader();
 
-                if (read.Read())
+
+                List<Invoice> Invoices = new List<Invoice>();
+
+                while (read.Read())
                 {
+
                     var invoice = new Invoice();
 
                     invoice.InvoiceId = (int)read["invoiceId"];
                     invoice.CustomerId = (int)read["customerId"];
                     invoice.InvoiceDate = (int)read["invoiceId"];
-                    invoice.BillingAddress = (string)read["billingAddress"];
-                    invoice.BillingCity = (string)read["billingCity"];
+                    invoice.BillingAddress = read["billingAddress"].ToString();
+                    invoice.BillingCity = read["billingCity"].ToString();
                     invoice.BillingState = read["billingState"].ToString();
-                    invoice.BillingCountry = (string)read["billingCountry"];
-                    invoice.BillingPostalCode = (string)read["billingPostalCode"];
+                    invoice.BillingCountry = read["billingCountry"].ToString();
+                    invoice.BillingPostalCode = read["billingPostalCode"].ToString();
                     invoice.Total = (decimal)read["total"];
                     invoice.SalesRep = read["saleRep"].ToString();
 
-                    return invoice;
+                    Invoices.Add(invoice);
                 }
-
-                return null;
+                return Invoices;
             }
         }
     }
