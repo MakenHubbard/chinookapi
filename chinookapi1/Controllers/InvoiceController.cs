@@ -28,7 +28,7 @@ namespace chinookapi1.Controllers
                         join customer c
 	                        on e.EmployeeId = c.SupportRepId
                         join Invoice i
-	                        on i.CustomerId = c.CustomerId ";
+	                        on i.CustomerId = c.CustomerId";
 
                 var read = command.ExecuteReader();
 
@@ -39,7 +39,7 @@ namespace chinookapi1.Controllers
                 {
 
                     var invoice = new Invoice();
-
+                    
                     invoice.InvoiceId = (int)read["invoiceId"];
                     invoice.CustomerId = (int)read["customerId"];
                     invoice.InvoiceDate = (int)read["invoiceId"];
@@ -54,6 +54,47 @@ namespace chinookapi1.Controllers
                     Invoices.Add(invoice);
                 }
                 return Invoices;
+
+            }
+        }
+
+        [HttpGet("invoiceTwo")]
+        public List<Invoice> GetCustomer()
+        {
+            using (var connection = new SqlConnection("Server=(local);Database=Chinook;Trusted_Connection=True"))
+            {
+                connection.Open();
+                var command = connection.CreateCommand();
+                command.CommandText = @"select 
+	                                         [Invoice Total] = i.Total,
+	                                         [Customer Name] = c.FirstName + ' ' + c.LastName,
+	                                         Country = i.BillingCountry,
+	                                        [sale rep] = e.FirstName + ' ' + e.LastName
+                                        from employee e
+                                        join customer c
+	                                        on e.EmployeeId = c.SupportRepId
+                                        join Invoice i
+	                                        on i.CustomerId = c.CustomerId";
+
+                var read = command.ExecuteReader();
+
+                List<Invoice> Invoices2 = new List<Invoice>();
+
+                while (read.Read())
+                {
+                    var invoice = new Invoice();
+                    var customer = new Customer();
+                    var customerFullName = customer.FirstName + " " + customer.LastName;
+
+                    invoice.Total = (decimal)read["Invoice Total"];
+                    customerFullName = read["Customer Name"].ToString();
+                    invoice.BillingCountry = read["Country"].ToString();
+                    invoice.SalesRep = read["sale rep"].ToString();
+
+                    Invoices2.Add(invoice);
+
+                }
+                return Invoices2;
             }
         }
     }
