@@ -83,11 +83,9 @@ namespace chinookapi1.Controllers
                 while (read.Read())
                 {
                     var invoice = new Invoice();
-                    var customer = new Customer();
-                    var customerFullName = customer.FirstName + " " + customer.LastName;
 
                     invoice.Total = (decimal)read["Invoice Total"];
-                    customerFullName = read["Customer Name"].ToString();
+                    invoice.CustomerFullName = read["Customer Name"].ToString();
                     invoice.BillingCountry = read["Country"].ToString();
                     invoice.SalesRep = read["sale rep"].ToString();
 

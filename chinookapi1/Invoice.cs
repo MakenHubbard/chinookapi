@@ -17,5 +17,6 @@ namespace chinookapi1
         public string BillingPostalCode { get; set; }
         public decimal Total { get; set; }
         public string SalesRep { get; set; }
+        public string CustomerFullName { get; set; }
     }
 }
